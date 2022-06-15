@@ -2,7 +2,7 @@ import XCTest
 @testable import URLMonitoring
 
 final class URLMonitoringTests: XCTestCase {
-
+    
     func test_monitorNotifyOnFileCreation() throws {
         let urlDirectory = testDirectory()
         var sut = try makeSUT(for: urlDirectory)
@@ -34,7 +34,7 @@ final class URLMonitoringTests: XCTestCase {
         
         try sut.startMonitoring()
         try "AnyData".data(using: .utf8)!.write(to: fileURL, options: .atomic)
-
+        
         wait(for: [exp], timeout: 1)
     }
     
@@ -59,7 +59,7 @@ final class URLMonitoringTests: XCTestCase {
     func test_monitorCanNotStartTwice() throws {
         let urlDirectory = testDirectory()
         let sut = try makeSUT(for: urlDirectory)
-
+        
         try sut.startMonitoring()
         
         XCTAssertThrowsError(try sut.startMonitoring(), "Monitor should not start twice")
@@ -96,10 +96,9 @@ final class URLMonitoringTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
-    private func makeSUT(for url: URL) throws -> URLMonitoring {
-        try URLMonitor(url)
+    private func makeSUT(for url: URL, file: StaticString = #filePath, line: UInt = #line) throws -> URLMonitoring {
+        let sut = try URLMonitor(url)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
-
-
-

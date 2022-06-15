@@ -1,6 +1,6 @@
 //
 //  XCTestCaseHelper.swift
-//  
+//
 //
 //  Created by Omar Allaham on 6/15/22.
 //
@@ -19,5 +19,11 @@ extension XCTestCase {
         }
         
         return url
+    }
+    
+    func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+        }
     }
 }
